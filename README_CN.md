@@ -1,4 +1,4 @@
-[Englisg](README.md) | **简体中文** |
+[English](README.md) | **简体中文** |
 # Automatic_flashing_the_Magisk_Delta
  可以在电脑上执行修补到刷入Magisk
 
