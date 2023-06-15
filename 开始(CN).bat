@@ -81,14 +81,6 @@ echo 设备已连接，继续执行其他操作...
 echo 正在等待 10 秒...以便设备能进入fastboot
 timeout /t 10 >nul
 
-%adb-tools%\fastboot devices
-
-if errorlevel 1 (
-    echo Fastboot未检测到设备！
-    pause
-    exit /b
-)
-
 echo 设备已连接，继续执行其他操作...
 %adb-tools%\fastboot flash boot %boot_Magiskpatched%\boot_Magiskpatched.img
 
@@ -128,7 +120,7 @@ if exist tmp\lib\armeabi-v7a (
 		copy tmp\lib\armeabi-v7a\libmagiskinit.so bin\magiskinit 1>nul 2>nul
 	)
 )
-echo.更新完成！
+echo.更新完成!
 rd /s /q tmp
 
 .\source\payload\payload-dumper-go.exe -p init_boot -o %boot_origin% .\payload.bin
@@ -143,18 +135,10 @@ if exist new-boot.img (move new-boot.img %boot_Magiskpatched%\boot_Magiskpatched
 
 echo 设备已连接，继续执行其他操作...
 
-%adb-tools%\adb reboot fastboot
+%adb-tools%\adb reboot bootloader
 
 echo 正在等待 10 秒...以便设备能进入fastboot
 timeout /t 10 >nul
-
-%adb-tools%\fastboot bootloader
-
-if errorlevel 1 (
-    echo Fastboot未检测到设备！
-    pause
-    exit /b
-)
 
 echo 设备已连接，继续执行其他操作...
 %adb-tools%\fastboot flash init_boot %boot_Magiskpatched%\boot_Magiskpatched.img
@@ -210,14 +194,6 @@ echo 设备已连接，继续执行其他操作...
 echo 正在等待 10 秒...以便设备能进入fastboot
 timeout /t 10 >nul
 
-%adb-tools%\fastboot devices
-
-if errorlevel 1 (
-    echo Fastboot未检测到设备！
-    pause
-    exit /b
-)
-
 echo 设备已连接，继续执行其他操作...
 %adb-tools%\fastboot flash boot %boot_Magiskpatched%\boot_Magiskpatched.img
 
@@ -264,18 +240,10 @@ if exist new-boot.img (move new-boot.img %boot_Magiskpatched%\boot_Magiskpatched
 
 echo 设备已连接，继续执行其他操作...
 
-%adb-tools%\adb reboot fastboot
+%adb-tools%\adb reboot bootloader
 
 echo 正在等待 10 秒...以便设备能进入fastboot
 timeout /t 10 >nul
-
-%adb-tools%\fastboot bootloader
-
-if errorlevel 1 (
-    echo Fastboot未检测到设备！
-    pause
-    exit /b
-)
 
 echo 设备已连接，继续执行其他操作...
 %adb-tools%\fastboot flash init_boot %boot_Magiskpatched%\boot_Magiskpatched.img

@@ -81,14 +81,6 @@ echo Device connected, proceeding with further operations...
 echo Waiting for 10 seconds... for the device to enter fastboot
 timeout /t 10 >nul
 
-%adb-tools%\fastboot devices
-
-if errorlevel 1 (
-    echo Device not detected in Fastboot!
-    pause
-    exit /b
-)
-
 echo Device connected, proceeding with further operations...
 %adb-tools%\fastboot flash boot %boot_Magiskpatched%\boot_Magiskpatched.img
 
@@ -143,18 +135,10 @@ if exist new-boot.img (move new-boot.img %boot_Magiskpatched%\boot_Magiskpatched
 
 echo Device connected, proceeding with further operations...
 
-%adb-tools%\adb reboot fastboot
+%adb-tools%\adb reboot bootloader
 
 echo Waiting for 10 seconds... for the device to enter fastboot
 timeout /t 10 >nul
-
-%adb-tools%\fastboot bootloader
-
-if errorlevel 1 (
-    echo Device not detected in Fastboot!
-    pause
-    exit /b
-)
 
 echo Device connected, proceeding with further operations...
 %adb-tools%\fastboot flash init_boot %boot_Magiskpatched%\boot_Magiskpatched.img
@@ -210,14 +194,6 @@ echo Device connected, proceeding with further operations...
 echo Waiting for 10 seconds... for the device to enter fastboot
 timeout /t 10 >nul
 
-%adb-tools%\fastboot devices
-
-if errorlevel 1 (
-    echo Device not detected in Fastboot!
-    pause
-    exit /b
-)
-
 echo Device connected, proceeding with further operations...
 %adb-tools%\fastboot flash boot %boot_Magiskpatched%\boot_Magiskpatched.img
 
@@ -264,18 +240,10 @@ if exist new-boot.img (move new-boot.img %boot_Magiskpatched%\boot_Magiskpatched
 
 echo The device is connected, continue to do other operations...
 
-%adb-tools%\adb reboot fastboot
+%adb-tools%\adb reboot bootloader
 
 echo Waiting 10 seconds... for device to enter fastboot
 timeout /t 10 >nul
-
-%adb-tools%\fastboot bootloader
-
-if errorlevel 1 (
-    echo Fastboot not detecting the device!
-    pause
-    exit /b
-)
 
 echo The device is connected, continue to do other operations...
 %adb-tools%\fastboot flash init_boot %boot_Magiskpatched%\boot_Magiskpatched.img
