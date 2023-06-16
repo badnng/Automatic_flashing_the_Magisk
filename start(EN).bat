@@ -40,6 +40,10 @@ if errorlevel 2 (
     goto flash_a_top
 ) else (
     rem 选择 A，执行 flash_a
+	ren ".\Magisk.zip" "Magisk.apk"
+	adb install .\Magisk.apk
+	ren ".\Magisk.apk" "Magisk.zip"
+
     bin\busybox unzip Magisk.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
 echo.
 if not exist tmp/META-INF (echo.File error! &rd /s /q tmp 1>nul 2>nul&pause&exit)
@@ -81,6 +85,14 @@ echo Device connected, proceeding with further operations...
 echo Waiting for 10 seconds... for the device to enter fastboot
 timeout /t 10 >nul
 
+%adb-tools%\fastboot devices
+
+if errorlevel 1 (
+    echo Device not detected in Fastboot!
+    pause
+    exit /b
+)
+
 echo Device connected, proceeding with further operations...
 %adb-tools%\fastboot flash boot %boot_Magiskpatched%\boot_Magiskpatched.img
 
@@ -99,6 +111,10 @@ if errorlevel 2 (
     goto flash_b_top
 ) else (
     rem 选择 A，执行 flash_b
+	ren ".\Magisk.zip" "Magisk.apk"
+	adb install .\Magisk.apk
+	ren ".\Magisk.apk" "Magisk.zip"
+
     bin\busybox unzip Magisk.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
 echo.
 if not exist tmp/META-INF (echo.File error! &rd /s /q tmp 1>nul 2>nul&pause&exit)
@@ -135,10 +151,18 @@ if exist new-boot.img (move new-boot.img %boot_Magiskpatched%\boot_Magiskpatched
 
 echo Device connected, proceeding with further operations...
 
-%adb-tools%\adb reboot bootloader
+%adb-tools%\adb reboot fastboot
 
 echo Waiting for 10 seconds... for the device to enter fastboot
 timeout /t 10 >nul
+
+%adb-tools%\fastboot bootloader
+
+if errorlevel 1 (
+    echo Device not detected in Fastboot!
+    pause
+    exit /b
+)
 
 echo Device connected, proceeding with further operations...
 %adb-tools%\fastboot flash init_boot %boot_Magiskpatched%\boot_Magiskpatched.img
@@ -153,6 +177,10 @@ goto end
 
 :flash_a_top
 CLS
+ren ".\Magisk-v26.1.zip" "Magisk-v26.1.apk"
+adb install .\Magisk-v26.1.apk
+ren ".\Magisk-v26.1.apk" "Magisk-v26.1.zip"
+
 bin\busybox unzip Magisk-v26.1.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
 echo.
 if not exist tmp/META-INF (echo.File error!&rd /s /q tmp 1>nul 2>nul&pause&exit)
@@ -194,6 +222,14 @@ echo Device connected, proceeding with further operations...
 echo Waiting for 10 seconds... for the device to enter fastboot
 timeout /t 10 >nul
 
+%adb-tools%\fastboot devices
+
+if errorlevel 1 (
+    echo Device not detected in Fastboot!
+    pause
+    exit /b
+)
+
 echo Device connected, proceeding with further operations...
 %adb-tools%\fastboot flash boot %boot_Magiskpatched%\boot_Magiskpatched.img
 
@@ -204,6 +240,10 @@ goto end
 
 :flash_b_top
 CLS
+ren ".\Magisk-v26.1.zip" "Magisk-v26.1.apk"
+adb install .\Magisk-v26.1.apk
+ren ".\Magisk-v26.1.apk" "Magisk-v26.1.zip"
+
 bin\busybox unzip Magisk-V26.1.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
 echo.
 if not exist tmp/META-INF (echo.flies is error！&rd /s /q tmp 1>nul 2>nul&pause&exit)
@@ -240,10 +280,18 @@ if exist new-boot.img (move new-boot.img %boot_Magiskpatched%\boot_Magiskpatched
 
 echo The device is connected, continue to do other operations...
 
-%adb-tools%\adb reboot bootloader
+%adb-tools%\adb reboot fastboot
 
 echo Waiting 10 seconds... for device to enter fastboot
 timeout /t 10 >nul
+
+%adb-tools%\fastboot bootloader
+
+if errorlevel 1 (
+    echo Fastboot not detecting the device!
+    pause
+    exit /b
+)
 
 echo The device is connected, continue to do other operations...
 %adb-tools%\fastboot flash init_boot %boot_Magiskpatched%\boot_Magiskpatched.img

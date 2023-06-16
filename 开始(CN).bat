@@ -36,10 +36,14 @@ exit
 CLS
 choice /C AB /N /M "请选择要刷入的Magisk分支：Magisk_Delta(A) 或 Magisk_topjohnwu(B)"
 if errorlevel 2 (
-    rem 选择 B，执行 flash_b
+    rem 选择 B，执行 flash_a_top
     goto flash_a_top
 ) else (
-    rem 选择 A，执行 flash_a
+    rem 选择 A，执行 
+	ren ".\Magisk.zip" "Magisk.apk"
+	adb install .\Magisk.apk
+	ren ".\Magisk.apk" "Magisk.zip"
+
     bin\busybox unzip Magisk.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
 echo.
 if not exist tmp/META-INF (echo.文件错误！&rd /s /q tmp 1>nul 2>nul&pause&exit)
@@ -99,6 +103,10 @@ if errorlevel 2 (
     goto flash_b_top
 ) else (
     rem 选择 A，执行 flash_b
+	ren ".\Magisk.zip" "Magisk.apk"
+	adb install .\Magisk.apk
+	ren ".\Magisk.apk" "Magisk.zip"
+
     bin\busybox unzip Magisk.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
 echo.
 if not exist tmp/META-INF (echo.文件错误！&rd /s /q tmp 1>nul 2>nul&pause&exit)
@@ -153,6 +161,10 @@ goto end
 
 :flash_a_top
 CLS
+ren ".\Magisk-v26.1.zip" "Magisk-v26.1.apk"
+adb install .\Magisk-v26.1.apk
+ren ".\Magisk-v26.1.apk" "Magisk-v26.1.zip"
+
 bin\busybox unzip Magisk-v26.1.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
 echo.
 if not exist tmp/META-INF (echo.文件错误！&rd /s /q tmp 1>nul 2>nul&pause&exit)
@@ -204,6 +216,10 @@ goto end
 
 :flash_b_top
 CLS
+ren ".\Magisk-v26.1.zip" "Magisk-v26.1.apk"
+adb install .\Magisk-v26.1.apk
+ren ".\Magisk-v26.1.apk" "Magisk-v26.1.zip"
+
 bin\busybox unzip Magisk-V26.1.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
 echo.
 if not exist tmp/META-INF (echo.文件错误！&rd /s /q tmp 1>nul 2>nul&pause&exit)
