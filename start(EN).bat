@@ -41,7 +41,7 @@ if errorlevel 2 (
 ) else (
     rem 选择 A，执行 flash_a
 	ren ".\Magisk.zip" "Magisk.apk"
-	adb install .\Magisk.apk
+	%adb-tools%\adb install .\Magisk.apk
 	ren ".\Magisk.apk" "Magisk.zip"
 
     bin\busybox unzip Magisk.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
@@ -112,7 +112,7 @@ if errorlevel 2 (
 ) else (
     rem 选择 A，执行 flash_b
 	ren ".\Magisk.zip" "Magisk.apk"
-	adb install .\Magisk.apk
+	%adb-tools%\adb install .\Magisk.apk
 	ren ".\Magisk.apk" "Magisk.zip"
 
     bin\busybox unzip Magisk.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
@@ -178,7 +178,7 @@ goto end
 :flash_a_top
 CLS
 ren ".\Magisk-v26.1.zip" "Magisk-v26.1.apk"
-adb install .\Magisk-v26.1.apk
+%adb-tools%\adb install .\Magisk-v26.1.apk
 ren ".\Magisk-v26.1.apk" "Magisk-v26.1.zip"
 
 bin\busybox unzip Magisk-v26.1.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
@@ -241,7 +241,7 @@ goto end
 :flash_b_top
 CLS
 ren ".\Magisk-v26.1.zip" "Magisk-v26.1.apk"
-adb install .\Magisk-v26.1.apk
+%adb-tools%\adb install .\Magisk-v26.1.apk
 ren ".\Magisk-v26.1.apk" "Magisk-v26.1.zip"
 
 bin\busybox unzip Magisk-V26.1.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
