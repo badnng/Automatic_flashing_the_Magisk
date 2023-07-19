@@ -1,8 +1,9 @@
 @echo off
 
 set adb-tools=.\source\platform-tools
-set boot_origin=.\boot_origin
-set boot_Magiskpatched=.\boot_Magiskpatched
+set boot_origin=.\boot
+set boot_Magiskpatched=.\boot
+set Magisk_source=.\source\Magisk_flies
 
 :start
 CLS
@@ -16,35 +17,39 @@ echo.按B键开始进行新机型init_boot的全自动刷入~
 
 %检查文件是否完整%
 if exist .\Magisk.zip (
-    choice /C AB /N /M "请选择 A 或 B："
+    choice /C AB /N /M ""
     if errorlevel 2 goto flash_b
     goto flash_a
 ) else (
-    goto error-noMagisk.zip
+    goto noMagisk.zip
 )
 
 
-:error-noMagisk.zip
-CLS
+:noMagisk.zip
 echo.
-echo.  Magisk.zip不存在，请检查是否放入Magisk文件
-pause>null
-del null
-exit
+echo.  正在下载Magisk.zip文件
+curl -o %Magisk_source%\Magisk.zip https://badnng.github.io/Automatic_flashing_the_Magisk_Delta/Magisk.zip
+if exist %Magisk_source%\Magisk.zip (
+	choice /C AB /N /M "请选择 A 或 B："
+    if errorlevel 2 goto flash_b
+    goto flash_a
+) else (
+	goto noMagisk.zip
+)
 
 :flash_a
 CLS
 choice /C AB /N /M "请选择要刷入的Magisk分支：Magisk_Delta(A) 或 Magisk_topjohnwu(B)"
 if errorlevel 2 (
     rem 选择 B，执行 flash_a_top
-    goto flash_a_top
+    goto flash_a_top_check
 ) else (
     rem 选择 A，执行 
-	ren ".\Magisk.zip" "Magisk.apk"
-	%adb-tools%\adb install .\Magisk.apk
-	ren ".\Magisk.apk" "Magisk.zip"
+	ren "%Magisk_source%.\Magisk.zip" "Magisk.apk"
+	%adb-tools%\adb install %Magisk_source%\Magisk.apk
+	ren "%Magisk_source%\Magisk.apk" "Magisk.zip"
 
-    bin\busybox unzip Magisk.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
+    bin\busybox unzip %Magisk_source%\Magisk.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
 echo.
 if not exist tmp/META-INF (echo.文件错误！&rd /s /q tmp 1>nul 2>nul&pause&exit)
 
@@ -100,14 +105,14 @@ CLS
 choice /C AB /N /M "请选择要刷入的Magisk分支：Magisk_Delta(A) 或 Magisk_topjohnwu(B)"
 if errorlevel 2 (
     rem 选择 B，执行 flash_b_top
-    goto flash_b_top
+    goto flash_a_top_check
 ) else (
     rem 选择 A，执行 flash_b
-	ren ".\Magisk.zip" "Magisk.apk"
-	%adb-tools%\adb install .\Magisk.apk
-	ren ".\Magisk.apk" "Magisk.zip"
+	ren "%Magisk_source%\Magisk.zip" "Magisk.apk"
+	%adb-tools%\adb install %Magisk_source%\Magisk.apk
+	ren "%Magisk_source%\Magisk.apk" "Magisk.zip"
 
-    bin\busybox unzip Magisk.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
+    bin\busybox unzip %Magisk_source%\Magisk.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
 echo.
 if not exist tmp/META-INF (echo.文件错误！&rd /s /q tmp 1>nul 2>nul&pause&exit)
 
@@ -159,13 +164,22 @@ goto end
 
 
 
+:flash_a_top_check
+CLS
+if exist %Magisk_source%\Magisk-v26.1.zip (
+    goto flash_a_top
+) else (
+    curl -o %Magisk_source%\Magisk-v26.1.zip https://badnng.github.io/Automatic_flashing_the_Magisk_Delta/Magisk-v26.1.zip
+	goto flash_a_top_check
+)
+
 :flash_a_top
 CLS
-ren ".\Magisk-v26.1.zip" "Magisk-v26.1.apk"
-%adb-tools%\adb install .\Magisk-v26.1.apk
-ren ".\Magisk-v26.1.apk" "Magisk-v26.1.zip"
+ren "%Magisk_source%\Magisk-v26.1.zip" "Magisk-v26.1.apk"
+%adb-tools%\adb install %Magisk_source%\Magisk-v26.1.apk
+ren "%Magisk_source%\Magisk-v26.1.apk" "Magisk-v26.1.zip"
 
-bin\busybox unzip Magisk-v26.1.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
+bin\busybox unzip %Magisk_source%\Magisk-v26.1.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
 echo.
 if not exist tmp/META-INF (echo.文件错误！&rd /s /q tmp 1>nul 2>nul&pause&exit)
 
@@ -214,13 +228,22 @@ echo 设备将重启进入系统，祝您使用愉快~
 goto end
 
 
+:flash_b_top_check
+CLS
+if exist .\Magisk-v26.1.zip (
+    goto flash_b_top
+) else (
+    curl -o %Magisk_source%\Magisk-v26.1.zip https://badnng.github.io/Automatic_flashing_the_Magisk_Delta/Magisk-v26.1.zip
+	goto flash_b_top_check
+)
+
 :flash_b_top
 CLS
-ren ".\Magisk-v26.1.zip" "Magisk-v26.1.apk"
-%adb-tools%\adb install .\Magisk-v26.1.apk
-ren ".\Magisk-v26.1.apk" "Magisk-v26.1.zip"
+ren "%Magisk_source%\Magisk-v26.1.zip" "Magisk-v26.1.apk"
+%adb-tools%\adb install %Magisk_source%\Magisk-v26.1.apk
+ren "%Magisk_source%\Magisk-v26.1.apk" "Magisk-v26.1.zip"
 
-bin\busybox unzip Magisk-V26.1.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
+bin\busybox unzip %Magisk_source%\Magisk-V26.1.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
 echo.
 if not exist tmp/META-INF (echo.文件错误！&rd /s /q tmp 1>nul 2>nul&pause&exit)
 
@@ -279,12 +302,16 @@ if errorlevel 2 (
 	del /s /q %boot_Magiskpatched%\boot_Magiskpatched.img
 	del /s /q %boot_origin%\boot.img
 	del /s /q %boot_origin%\init_boot.img
+	del /s /q %Magisk_source%\Magisk.zip
+	del /s /q %Magisk_source%\Magisk-v26.1.zip
 ) else (
     echo 删除文件
     del /s /q .\payload.bin
 	del /s /q %boot_Magiskpatched%\boot_Magiskpatched.img
 	del /s /q %boot_origin%\boot.img
 	del /s /q %boot_origin%\init_boot.img
+	del /s /q %Magisk_source%\Magisk.zip
+	del /s /q %Magisk_source%\Magisk-v26.1.zip
 )
 endlocal
 
