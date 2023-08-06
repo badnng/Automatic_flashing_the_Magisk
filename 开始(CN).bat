@@ -4,6 +4,7 @@ set adb-tools=.\source\platform-tools
 set boot_origin=.\boot
 set boot_Magiskpatched=.\boot
 set Magisk_source=.\source\Magisk_flies
+set vbmeta=.\vbmeta
 
 :start
 CLS
@@ -16,7 +17,7 @@ echo.按B键开始进行新机型init_boot的全自动刷入~
 
 
 %检查文件是否完整%
-if exist .\Magisk.zip (
+if exist %Magisk_source%\Magisk.zip (
     choice /C AB /N /M ""
     if errorlevel 2 goto flash_b
     goto flash_a
@@ -74,6 +75,8 @@ echo.更新完成！
 rd /s /q tmp
 
 .\source\payload\payload-dumper-go.exe -p boot -o %boot_origin% .\payload.bin
+.\source\payload\payload-dumper-go.exe -p vbmeta -o %vbmeta% .\payload.bin
+
 if not exist %boot_origin%\boot.img (echo.当前目录没有 boot.img 文件！& pause & exit /b)
 if exist %boot_Magiskpatched%\boot_Magiskpatched.img (del /s /q %boot_Magiskpatched%\boot_Magiskpatched.img 1>nul 2>nul)
 echo.
@@ -93,9 +96,19 @@ timeout /t 10 >nul
 echo 设备已连接，继续执行其他操作...
 %adb-tools%\fastboot flash boot %boot_Magiskpatched%\boot_Magiskpatched.img
 
-echo 设备将重启进入系统，祝您使用愉快~
-%adb-tools%\fastboot reboot
-goto end
+choice /C AB /N /M "对于部分机型，需要关闭avb验证，请判断您的机型是否需要关闭avb验证，需要输入A，不需要输入B"
+if errorlevel 2 (
+	echo 设备将重启进入系统，祝您使用愉快~
+	%adb-tools%\fastboot reboot
+	goto end
+) else (
+	echo 设备将重启进入系统，祝您使用愉快~
+	%adb-tools%\fastboot --disable-verity --disable-verification flash vbmeta %vbmeta%\vbmeta.img
+	%adb-tools%\fastboot reboot
+	goto end
+)
+
+
 )
 
 
@@ -137,6 +150,7 @@ echo.更新完成!
 rd /s /q tmp
 
 .\source\payload\payload-dumper-go.exe -p init_boot -o %boot_origin% .\payload.bin
+.\source\payload\payload-dumper-go.exe -p vbmeta -o %vbmeta% .\payload.bin
 if not exist %boot_origin%\init_boot.img (echo.当前目录没有 init_boot.img 文件！& pause & exit /b)
 if exist %boot_Magiskpatched%\boot_Magiskpatched.img (del /s /q %boot_Magiskpatched%\boot_Magiskpatched.img 1>nul 2>nul)
 echo.
@@ -156,10 +170,16 @@ timeout /t 10 >nul
 echo 设备已连接，继续执行其他操作...
 %adb-tools%\fastboot flash init_boot %boot_Magiskpatched%\boot_Magiskpatched.img
 
-echo 设备将在3秒后重启进入系统，祝您使用愉快~
-timeout /t 3 >nul
-%adb-tools%\fastboot reboot
-goto end
+choice /C AB /N /M "对于部分机型，需要关闭avb验证，请判断您的机型是否需要关闭avb验证，需要输入A，不需要输入B"
+if errorlevel 2 (
+	echo 设备将重启进入系统，祝您使用愉快~
+	%adb-tools%\fastboot reboot
+	goto end
+) else (
+	echo 设备将重启进入系统，祝您使用愉快~
+	%adb-tools%\fastboot --disable-verity --disable-verification flash vbmeta %vbmeta%\vbmeta.img
+	%adb-tools%\fastboot reboot
+	goto end
 )
 
 
@@ -204,6 +224,8 @@ echo.更新完成！
 rd /s /q tmp
 
 .\source\payload\payload-dumper-go.exe -p boot -o %boot_origin% .\payload.bin
+.\source\payload\payload-dumper-go.exe -p vbmeta -o %vbmeta% .\payload.bin
+
 if not exist %boot_origin%\boot.img (echo.当前目录没有 boot.img 文件！& pause & exit /b)
 if exist %boot_Magiskpatched%\boot_Magiskpatched.img (del /s /q %boot_Magiskpatched%\boot_Magiskpatched.img 1>nul 2>nul)
 echo.
@@ -223,10 +245,17 @@ timeout /t 10 >nul
 echo 设备已连接，继续执行其他操作...
 %adb-tools%\fastboot flash boot %boot_Magiskpatched%\boot_Magiskpatched.img
 
-echo 设备将重启进入系统，祝您使用愉快~
-%adb-tools%\fastboot reboot
-goto end
-
+choice /C AB /N /M "对于部分机型，需要关闭avb验证，请判断您的机型是否需要关闭avb验证，需要输入A，不需要输入B"
+if errorlevel 2 (
+	echo 设备将重启进入系统，祝您使用愉快~
+	%adb-tools%\fastboot reboot
+	goto end
+) else (
+	echo 设备将重启进入系统，祝您使用愉快~
+	%adb-tools%\fastboot --disable-verity --disable-verification flash vbmeta %vbmeta%\vbmeta.img
+	%adb-tools%\fastboot reboot
+	goto end
+)
 
 :flash_b_top_check
 CLS
@@ -268,6 +297,8 @@ echo.更新完成！
 rd /s /q tmp
 
 .\source\payload\payload-dumper-go.exe -p init_boot -o %boot_origin% .\payload.bin
+.\source\payload\payload-dumper-go.exe -p vbmeta -o %vbmeta% .\payload.bin
+
 if not exist %boot_origin%\init_boot.img (echo.当前目录没有 init_boot.img 文件！& pause & exit /b)
 if exist %boot_Magiskpatched%\boot_Magiskpatched.img (del /s /q %boot_Magiskpatched%\boot_Magiskpatched.img 1>nul 2>nul)
 echo.
@@ -287,10 +318,18 @@ timeout /t 10 >nul
 echo 设备已连接，继续执行其他操作...
 %adb-tools%\fastboot flash init_boot %boot_Magiskpatched%\boot_Magiskpatched.img
 
-echo 设备将在3秒后重启进入系统，祝您使用愉快~
-timeout /t 3 >nul
-%adb-tools%\fastboot reboot
-goto end
+choice /C AB /N /M "对于部分机型，需要关闭avb验证，请判断您的机型是否需要关闭avb验证，需要输入A，不需要输入B"
+if errorlevel 2 (
+	echo 设备将重启进入系统，祝您使用愉快~
+	%adb-tools%\fastboot reboot
+	goto end
+) else (
+	echo 设备将重启进入系统，祝您使用愉快~
+	%adb-tools%\fastboot --disable-verity --disable-verification flash vbmeta %vbmeta%\vbmeta.img
+	%adb-tools%\fastboot reboot
+	goto end
+)
+
 
 
 :end
