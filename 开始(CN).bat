@@ -363,4 +363,5 @@ echo.    有能力的话关注一下我的b站呗，或者去酷安搜索badnng关注我，如果大佬能请我
 start .\source\QRCode\cd85617e1d34b8ebe63db88c22abd09.jpg
 echo.    本窗口将在6秒钟关闭~
 timeout /t 6 >nul
+taskkill -f -im adb.exe
 explorer "https://space.bilibili.com/355631279?spm_id_from=333.1007.0.0"
