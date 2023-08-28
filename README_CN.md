@@ -27,3 +27,4 @@
 - [Magisk_Delta](https://github.com/HuskyDG/magisk-files): 提供修补boot的脚本
 - [Busybox](https://github.com/rmyorston/busybox-w32): 可以在Windows使用.sh的框架
 - [Android Debug Bridge](https://source.android.google.cn/docs/setup/build/adb?hl=zh-cn#download-adb): 调用adb调试
+- [Aria2](https://github.com/aria2/aria2):调用工具的多线程模式下载文件

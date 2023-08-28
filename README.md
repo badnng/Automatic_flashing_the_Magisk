@@ -2,7 +2,8 @@
 
 ## Automatic_flashing_the_Magisk_Delta
 
- Can automatic flashing to HuskyDG's or topjohnwu's Magisk
+ Can automatic flashing to HuskyDG's or topjohnwu's Magisk 
+ but not English batch flies.....
 
 ## Features
 
@@ -27,3 +28,4 @@
 - [Magisk_Delta](https://github.com/HuskyDG/magisk-files): Patch the boot's script
 - [Busybox](https://github.com/rmyorston/busybox-w32): Can use .sh on Windows
 - [Android Debug Bridge](https://source.android.google.cn/docs/setup/build/adb?hl=zh-cn#download-adb): use the Android Debug Bridge flies
+- [Aria2](https://github.com/aria2/aria2): use the aria2 to multi thead download flies
