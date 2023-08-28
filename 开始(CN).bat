@@ -5,6 +5,7 @@ set boot_origin=.\boot
 set boot_Magiskpatched=.\boot
 set Magisk_source=.\source\Magisk_flies
 set vbmeta=.\vbmeta
+set aria=.\source\aria2
 
 :start
 CLS
@@ -15,6 +16,8 @@ echo.                               by badnng
 echo.按A键开始进行老机型的boot的全自动刷入~
 echo.按B键开始进行新机型init_boot的全自动刷入~
 
+del %Magisk_source%\Magisk.zip
+del %Magisk_source%\Magisk-v26.1.zip
 
 %检查文件是否完整%
 if exist %Magisk_source%\Magisk.zip (
@@ -28,8 +31,9 @@ if exist %Magisk_source%\Magisk.zip (
 
 :noMagisk.zip
 echo.
-echo.  正在下载Magisk.zip文件
-curl -o %Magisk_source%\Magisk.zip https://badnng.github.io/Automatic_flashing_the_Magisk_Delta/Magisk.zip
+echo.  正在获取最新版本的Magisk.zip文件
+%aria%\aria2c.exe -x 16 -c --file-allocation=none -o Magisk.zip -d %Magisk_source% https://badnng.github.io/Automatic_flashing_the_Magisk_Delta/Magisk.zip
+%aria%\aria2c.exe -x 16 -c --file-allocation=none -o Magisk-v26.1.zip -d %Magisk_source% https://badnng.github.io/Automatic_flashing_the_Magisk_Delta/Magisk-v26.1.zip
 if exist %Magisk_source%\Magisk.zip (
 	choice /C AB /N /M "请选择 A 或 B："
     if errorlevel 2 goto flash_b
