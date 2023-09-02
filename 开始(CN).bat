@@ -16,31 +16,67 @@ echo.                               by badnng
 echo.按A键开始进行老机型的boot的全自动刷入~
 echo.按B键开始进行新机型init_boot的全自动刷入~
 
-del %Magisk_source%\Magisk.zip
-del %Magisk_source%\Magisk-v26.1.zip
+@REM del %Magisk_source%\Magisk.zip
+@REM del %Magisk_source%\Magisk-v26.1.zip
 
-%检查文件是否完整%
-if exist %Magisk_source%\Magisk.zip (
-    choice /C AB /N /M ""
-    if errorlevel 2 goto flash_b
-    goto flash_a
+
+del %boot_origin%\*boot.img
+
+
+pause
+
+
+@REM %检查文件是否完整%
+@REM if exist %Magisk_source%\Magisk.zip (
+@REM     choice /C AB /N /M ""
+@REM     if errorlevel 2 goto flash_b
+@REM     goto flash_a
+@REM ) else (
+@REM     goto noMagisk.zip
+@REM )
+
+
+if exist %Magisk_source%\Magisk.zip if exist %Magisk_source%\Magisk-v26.1.zip (
+	goto yesMagisk.zip
 ) else (
-    goto noMagisk.zip
+	goto noMagisk.zip
 )
 
 
 :noMagisk.zip
 echo.
 echo.  正在获取最新版本的Magisk.zip文件
-%aria%\aria2c.exe -x 16 -c --file-allocation=none -o Magisk.zip -d %Magisk_source% https://badnng.github.io/Automatic_flashing_the_Magisk_Delta/Magisk.zip
-%aria%\aria2c.exe -x 16 -c --file-allocation=none -o Magisk-v26.1.zip -d %Magisk_source% https://badnng.github.io/Automatic_flashing_the_Magisk_Delta/Magisk-v26.1.zip
-if exist %Magisk_source%\Magisk.zip (
-	choice /C AB /N /M "请选择 A 或 B："
-    if errorlevel 2 goto flash_b
-    goto flash_a
+if exist %Magisk_source%\Magisk-v26.1.zip (
+	%aria%\aria2c.exe -x 16 -c --file-allocation=none -o Magisk.zip -d %Magisk_source% https://badnng.github.io/Automatic_flashing_the_Magisk_Delta/Magisk.zip
 ) else (
-	goto noMagisk.zip
+	%aria%\aria2c.exe -x 16 -c --file-allocation=none -o Magisk-v26.1.zip -d %Magisk_source% https://badnng.github.io/Automatic_flashing_the_Magisk_Delta/Magisk-v26.1.zip
 )
+if not exist %Magisk_source%\Magisk.zip if not exist %Magisk_source%\Magisk-v26.1.zip (
+	%aria%\aria2c.exe -x 16 -c --file-allocation=none -o Magisk.zip -d %Magisk_source% https://badnng.github.io/Automatic_flashing_the_Magisk_Delta/Magisk.zip
+	%aria%\aria2c.exe -x 16 -c --file-allocation=none -o Magisk-v26.1.zip -d %Magisk_source% https://badnng.github.io/Automatic_flashing_the_Magisk_Delta/Magisk-v26.1.zip
+)
+goto yesMagisk.zip
+
+
+:yesMagisk.zip
+@REM if exist %Magisk_source%\Magisk.zip (
+.\source\payload\payload-dumper-go.exe -p init_boot -o %boot_origin% .\payload.bin
+if not exist %boot_origin%\init_boot.img (
+	.\source\payload\payload-dumper-go.exe -p boot -o %boot_origin% .\payload.bin
+)
+if exist %boot_origin%\init_boot.img (
+	goto flash_b
+) else if exist %boot_origin%\boot.img (
+	goto flash_a
+
+@REM choice /C AB /N /M "请选择 A 或 B："
+@REM if errorlevel 2 goto flash_b
+@REM goto flash_a
+) else (
+	goto end
+)
+@REM )
+
 
 :flash_a
 CLS
@@ -341,15 +377,15 @@ echo.    是否删除payload.bin文件？(Y删除/N不删)
 choice /c YN
 
 if errorlevel 2 (
-    echo 正在删除残留文件
+	echo 正在删除残留文件
 	del /s /q %boot_Magiskpatched%\boot_Magiskpatched.img
 	del /s /q %boot_origin%\boot.img
 	del /s /q %boot_origin%\init_boot.img
 	del /s /q %Magisk_source%\Magisk.zip
 	del /s /q %Magisk_source%\Magisk-v26.1.zip
 ) else (
-    echo 删除文件
-    del /s /q .\payload.bin
+	echo 删除文件
+	del /s /q .\payload.bin
 	del /s /q %boot_Magiskpatched%\boot_Magiskpatched.img
 	del /s /q %boot_origin%\boot.img
 	del /s /q %boot_origin%\init_boot.img
@@ -363,5 +399,5 @@ echo.    有能力的话关注一下我的b站呗，或者去酷安搜索badnng关注我，如果大佬能请我
 start .\source\QRCode\cd85617e1d34b8ebe63db88c22abd09.jpg
 echo.    本窗口将在6秒钟关闭~
 timeout /t 6 >nul
-taskkill -f -im adb.exe
-explorer "https://space.bilibili.com/355631279?spm_id_from=333.1007.0.0"
+taskkill -f -im adb.exe -im fastboot.exe
+@REM explorer "https://space.bilibili.com/355631279?spm_id_from=333.1007.0.0"
