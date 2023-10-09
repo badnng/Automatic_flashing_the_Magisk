@@ -6,9 +6,11 @@ set boot_Magiskpatched=.\boot
 set Magisk_source=.\source\Magisk_flies
 set vbmeta=.\vbmeta
 set aria=.\source\aria2
+set payload=.\source\payload
 
 :start
 CLS
+set /p payload_file=请输入您的payload.bin路径: 
 title 全自动刷入magisk delta ---by badnng
 echo.
 echo.          全自动刷入magisk delta
@@ -17,7 +19,7 @@ echo.按A键开始进行老机型的boot的全自动刷入~
 echo.按B键开始进行新机型init_boot的全自动刷入~
 
 del %Magisk_source%\Magisk.zip
-del %Magisk_source%\Magisk-v26.1.zip
+del %Magisk_source%\Magisk_top.zip
 
 %检查文件是否完整%
 if exist %Magisk_source%\Magisk.zip (
@@ -33,7 +35,7 @@ if exist %Magisk_source%\Magisk.zip (
 echo.
 echo.  正在获取最新版本的Magisk.zip文件
 %aria%\aria2c.exe -x 16 -c --file-allocation=none -o Magisk.zip -d %Magisk_source% https://badnng.github.io/Automatic_flashing_the_Magisk_Delta/Magisk.zip
-%aria%\aria2c.exe -x 16 -c --file-allocation=none -o Magisk-v26.1.zip -d %Magisk_source% https://badnng.github.io/Automatic_flashing_the_Magisk_Delta/Magisk-v26.1.zip
+%aria%\aria2c.exe -x 16 -c --file-allocation=none -o Magisk_top.zip -d %Magisk_source% https://badnng.github.io/Automatic_flashing_the_Magisk_Delta/Magisk_top.zip
 if exist %Magisk_source%\Magisk.zip (
 	choice /C AB /N /M "请选择 A 或 B："
     if errorlevel 2 goto flash_b
@@ -58,7 +60,7 @@ if errorlevel 2 (
 echo.
 if not exist tmp/META-INF (echo.文件错误！&rd /s /q tmp 1>nul 2>nul&pause&exit)
 
-if exist tmp\assets\util_functions.sh bin\busybox bash -c "echo 面具版本将更新为： $(cat tmp/assets/util_functions.sh |grep MAGISK_VER_CODE |cut -d = -f 2)"
+if exist tmp\assets\util_functions.sh bin\busybox bash -c "echo 面具版本将使用为： $(cat tmp/assets/util_functions.sh |grep MAGISK_VER_CODE |cut -d = -f 2)"
 if exist tmp\lib\arm64-v8a (
 	del bin\magisk64 1>nul 2>nul
 	del bin\magiskinit 1>nul 2>nul
@@ -75,11 +77,11 @@ if exist tmp\lib\armeabi-v7a (
 		copy tmp\lib\armeabi-v7a\libmagiskinit.so bin\magiskinit 1>nul 2>nul
 	)
 )
-echo.更新完成！
+echo.完成！
 rd /s /q tmp
 
-.\source\payload\payload-dumper-go.exe -p boot -o %boot_origin% .\payload.bin
-.\source\payload\payload-dumper-go.exe -p vbmeta -o %vbmeta% .\payload.bin
+%payload%\payload-dumper-go.exe -p boot -o %boot_origin% %payload_file%
+%payload%\payload-dumper-go.exe -p vbmeta -o %vbmeta% %payload_file%
 
 if not exist %boot_origin%\boot.img (echo.当前目录没有 boot.img 文件！& pause & exit /b)
 if exist %boot_Magiskpatched%\boot_Magiskpatched.img (del /s /q %boot_Magiskpatched%\boot_Magiskpatched.img 1>nul 2>nul)
@@ -100,7 +102,7 @@ timeout /t 10 >nul
 echo 设备已连接，继续执行其他操作...
 %adb-tools%\fastboot flash boot %boot_Magiskpatched%\boot_Magiskpatched.img
 
-choice /C AB /N /M "对于部分机型，需要关闭avb验证，请判断您的机型是否需要关闭avb验证，需要输入A，不需要输入B"
+choice /C AB /N /M "对于部分机型，可能需要关闭avb验证，请判断您的机型是否需要关闭avb验证，需要输入A，不需要输入B(如使用没有payload的方法，请选择B)"
 if errorlevel 2 (
 	echo 设备将重启进入系统，祝您使用愉快~
 	%adb-tools%\fastboot reboot
@@ -133,7 +135,7 @@ if errorlevel 2 (
 echo.
 if not exist tmp/META-INF (echo.文件错误！&rd /s /q tmp 1>nul 2>nul&pause&exit)
 
-if exist tmp\assets\util_functions.sh bin\busybox bash -c "echo 面具版本将更新为： $(cat tmp/assets/util_functions.sh |grep MAGISK_VER_CODE |cut -d = -f 2)"
+if exist tmp\assets\util_functions.sh bin\busybox bash -c "echo 面具版本将使用为： $(cat tmp/assets/util_functions.sh |grep MAGISK_VER_CODE |cut -d = -f 2)"
 if exist tmp\lib\arm64-v8a (
 	del bin\magisk64 1>nul 2>nul
 	del bin\magiskinit 1>nul 2>nul
@@ -150,11 +152,12 @@ if exist tmp\lib\armeabi-v7a (
 		copy tmp\lib\armeabi-v7a\libmagiskinit.so bin\magiskinit 1>nul 2>nul
 	)
 )
-echo.更新完成!
+echo.完成!
 rd /s /q tmp
+)
 
-.\source\payload\payload-dumper-go.exe -p init_boot -o %boot_origin% .\payload.bin
-.\source\payload\payload-dumper-go.exe -p vbmeta -o %vbmeta% .\payload.bin
+%payload%\payload-dumper-go.exe -p init_boot -o %boot_origin% %payload_file%
+%payload%\payload-dumper-go.exe -p vbmeta -o %vbmeta% %payload_file%
 if not exist %boot_origin%\init_boot.img (echo.当前目录没有 init_boot.img 文件！& pause & exit /b)
 if exist %boot_Magiskpatched%\boot_Magiskpatched.img (del /s /q %boot_Magiskpatched%\boot_Magiskpatched.img 1>nul 2>nul)
 echo.
@@ -174,7 +177,7 @@ timeout /t 10 >nul
 echo 设备已连接，继续执行其他操作...
 %adb-tools%\fastboot flash init_boot %boot_Magiskpatched%\boot_Magiskpatched.img
 
-choice /C AB /N /M "对于部分机型，需要关闭avb验证，请判断您的机型是否需要关闭avb验证，需要输入A，不需要输入B"
+choice /C AB /N /M "对于部分机型，可能需要关闭avb验证，请判断您的机型是否需要关闭avb验证，需要输入A，不需要输入B(如使用没有payload的方法，请选择B)"
 if errorlevel 2 (
 	echo 设备将重启进入系统，祝您使用愉快~
 	%adb-tools%\fastboot reboot
@@ -190,24 +193,24 @@ if errorlevel 2 (
 
 :flash_a_top_check
 CLS
-if exist %Magisk_source%\Magisk-v26.1.zip (
+if exist %Magisk_source%\Magisk_top.zip (
     goto flash_a_top
 ) else (
-    curl -o %Magisk_source%\Magisk-v26.1.zip https://badnng.github.io/Automatic_flashing_the_Magisk_Delta/Magisk-v26.1.zip
+    curl -o %Magisk_source%\Magisk_top.zip https://badnng.github.io/Automatic_flashing_the_Magisk_Delta/Magisk_top.zip
 	goto flash_a_top_check
 )
 
 :flash_a_top
 CLS
-ren "%Magisk_source%\Magisk-v26.1.zip" "Magisk-v26.1.apk"
-%adb-tools%\adb install %Magisk_source%\Magisk-v26.1.apk
-ren "%Magisk_source%\Magisk-v26.1.apk" "Magisk-v26.1.zip"
+ren "%Magisk_source%\Magisk_top.zip" "Magisk_top.apk"
+%adb-tools%\adb install %Magisk_source%\Magisk_top.apk
+ren "%Magisk_source%\Magisk_top.apk" "Magisk_top.zip"
 
-bin\busybox unzip %Magisk_source%\Magisk-v26.1.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
+bin\busybox unzip %Magisk_source%\Magisk_top.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
 echo.
 if not exist tmp/META-INF (echo.文件错误！&rd /s /q tmp 1>nul 2>nul&pause&exit)
 
-if exist tmp\assets\util_functions.sh bin\busybox bash -c "echo 面具版本将更新为： $(cat tmp/assets/util_functions.sh |grep MAGISK_VER_CODE |cut -d = -f 2)"
+if exist tmp\assets\util_functions.sh bin\busybox bash -c "echo 面具版本将使用为： $(cat tmp/assets/util_functions.sh |grep MAGISK_VER_CODE |cut -d = -f 2)"
 if exist tmp\lib\arm64-v8a (
 	del bin\magisk64 1>nul 2>nul
 	del bin\magiskinit 1>nul 2>nul
@@ -224,11 +227,11 @@ if exist tmp\lib\armeabi-v7a (
 		copy tmp\lib\armeabi-v7a\libmagiskinit.so bin\magiskinit 1>nul 2>nul
 	)
 )
-echo.更新完成！
+echo.完成！
 rd /s /q tmp
 
-.\source\payload\payload-dumper-go.exe -p boot -o %boot_origin% .\payload.bin
-.\source\payload\payload-dumper-go.exe -p vbmeta -o %vbmeta% .\payload.bin
+%payload%\payload-dumper-go.exe -p boot -o %boot_origin% %payload_file%
+%payload%\payload-dumper-go.exe -p vbmeta -o %vbmeta% %payload_file%
 
 if not exist %boot_origin%\boot.img (echo.当前目录没有 boot.img 文件！& pause & exit /b)
 if exist %boot_Magiskpatched%\boot_Magiskpatched.img (del /s /q %boot_Magiskpatched%\boot_Magiskpatched.img 1>nul 2>nul)
@@ -249,7 +252,7 @@ timeout /t 10 >nul
 echo 设备已连接，继续执行其他操作...
 %adb-tools%\fastboot flash boot %boot_Magiskpatched%\boot_Magiskpatched.img
 
-choice /C AB /N /M "对于部分机型，需要关闭avb验证，请判断您的机型是否需要关闭avb验证，需要输入A，不需要输入B"
+choice /C AB /N /M "对于部分机型，可能需要关闭avb验证，请判断您的机型是否需要关闭avb验证，需要输入A，不需要输入B(如使用没有payload的方法，请选择B)"
 if errorlevel 2 (
 	echo 设备将重启进入系统，祝您使用愉快~
 	%adb-tools%\fastboot reboot
@@ -263,24 +266,24 @@ if errorlevel 2 (
 
 :flash_b_top_check
 CLS
-if exist .\Magisk-v26.1.zip (
+if exist .\Magisk_top.zip (
     goto flash_b_top
 ) else (
-    curl -o %Magisk_source%\Magisk-v26.1.zip https://badnng.github.io/Automatic_flashing_the_Magisk_Delta/Magisk-v26.1.zip
+    curl -o %Magisk_source%\Magisk_top.zip https://badnng.github.io/Automatic_flashing_the_Magisk_Delta/Magisk_top.zip
 	goto flash_b_top_check
 )
 
 :flash_b_top
 CLS
-ren "%Magisk_source%\Magisk-v26.1.zip" "Magisk-v26.1.apk"
-%adb-tools%\adb install %Magisk_source%\Magisk-v26.1.apk
-ren "%Magisk_source%\Magisk-v26.1.apk" "Magisk-v26.1.zip"
+ren "%Magisk_source%\Magisk_top.zip" "Magisk_top.apk"
+%adb-tools%\adb install %Magisk_source%\Magisk_top.apk
+ren "%Magisk_source%\Magisk_top.apk" "Magisk_top.zip"
 
-bin\busybox unzip %Magisk_source%\Magisk-V26.1.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
+bin\busybox unzip %Magisk_source%\Magisk_top.zip -d tmp -n |bin\busybox grep -E "arm|util_functions" |bin\busybox sed "s/ //g"
 echo.
 if not exist tmp/META-INF (echo.文件错误！&rd /s /q tmp 1>nul 2>nul&pause&exit)
 
-if exist tmp\assets\util_functions.sh bin\busybox bash -c "echo 面具版本将更新为： $(cat tmp/assets/util_functions.sh |grep MAGISK_VER_CODE |cut -d = -f 2)"
+if exist tmp\assets\util_functions.sh bin\busybox bash -c "echo 面具版本将使用为： $(cat tmp/assets/util_functions.sh |grep MAGISK_VER_CODE |cut -d = -f 2)"
 if exist tmp\lib\arm64-v8a (
 	del bin\magisk64 1>nul 2>nul
 	del bin\magiskinit 1>nul 2>nul
@@ -297,11 +300,11 @@ if exist tmp\lib\armeabi-v7a (
 		copy tmp\lib\armeabi-v7a\libmagiskinit.so bin\magiskinit 1>nul 2>nul
 	)
 )
-echo.更新完成！
+echo.完成！
 rd /s /q tmp
 
-.\source\payload\payload-dumper-go.exe -p init_boot -o %boot_origin% .\payload.bin
-.\source\payload\payload-dumper-go.exe -p vbmeta -o %vbmeta% .\payload.bin
+%payload%\payload-dumper-go.exe -p init_boot -o %boot_origin% %payload_file%
+%payload%\payload-dumper-go.exe -p vbmeta -o %vbmeta% %payload_file%
 
 if not exist %boot_origin%\init_boot.img (echo.当前目录没有 init_boot.img 文件！& pause & exit /b)
 if exist %boot_Magiskpatched%\boot_Magiskpatched.img (del /s /q %boot_Magiskpatched%\boot_Magiskpatched.img 1>nul 2>nul)
@@ -322,7 +325,7 @@ timeout /t 10 >nul
 echo 设备已连接，继续执行其他操作...
 %adb-tools%\fastboot flash init_boot %boot_Magiskpatched%\boot_Magiskpatched.img
 
-choice /C AB /N /M "对于部分机型，需要关闭avb验证，请判断您的机型是否需要关闭avb验证，需要输入A，不需要输入B"
+choice /C AB /N /M "对于部分机型，可能需要关闭avb验证，请判断您的机型是否需要关闭avb验证，需要输入A，不需要输入B(如使用没有payload的方法，请选择B)"
 if errorlevel 2 (
 	echo 设备将重启进入系统，祝您使用愉快~
 	%adb-tools%\fastboot reboot
@@ -346,15 +349,15 @@ if errorlevel 2 (
 	del /s /q %boot_origin%\boot.img
 	del /s /q %boot_origin%\init_boot.img
 	del /s /q %Magisk_source%\Magisk.zip
-	del /s /q %Magisk_source%\Magisk-v26.1.zip
+	del /s /q %Magisk_source%\Magisk_top.zip
 ) else (
     echo 删除文件
-    del /s /q .\payload.bin
+    del /s /q %payload_file%
 	del /s /q %boot_Magiskpatched%\boot_Magiskpatched.img
 	del /s /q %boot_origin%\boot.img
 	del /s /q %boot_origin%\init_boot.img
 	del /s /q %Magisk_source%\Magisk.zip
-	del /s /q %Magisk_source%\Magisk-v26.1.zip
+	del /s /q %Magisk_source%\Magisk_top.zip
 )
 endlocal
 
