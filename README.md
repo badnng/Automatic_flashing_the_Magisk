@@ -8,6 +8,7 @@
 ## Features
 
  You can patch the boot image and flash it without installing Magisk Manager on your phone
+ 
  Relatively small storage size (compared to V1)
  ![storage](大小.png)
 
