@@ -7,7 +7,7 @@
 ## 特点
 
  可以在电脑上执行修补boot并刷入magisk而且和你得设备相吻合
- 
+
  体积相对较少（与V1相比）
 ![大小](大小.png)
 
@@ -26,7 +26,6 @@
 ## 鸣谢
 
 - [Magisk](https://github.com/topjohnwu/Magisk): 提供修补boot的脚本
-- [Magisk_Delta](https://github.com/HuskyDG/magisk-files): 提供修补boot的脚本
 - [Busybox](https://github.com/rmyorston/busybox-w32): 可以在Windows使用.sh的框架
 - [Android Debug Bridge](https://source.android.google.cn/docs/setup/build/adb?hl=zh-cn#download-adb): 调用adb调试
 - [Aria2](https://github.com/aria2/aria2):调用工具的多线程模式下载文件

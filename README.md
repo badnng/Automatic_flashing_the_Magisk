@@ -27,7 +27,6 @@
 ## Thanks
 
 - [Magisk](https://github.com/topjohnwu/Magisk): Patch the boot's script
-- [Magisk_Delta](https://github.com/HuskyDG/magisk-files): Patch the boot's script
 - [Busybox](https://github.com/rmyorston/busybox-w32): Can use .sh on Windows
 - [Android Debug Bridge](https://source.android.google.cn/docs/setup/build/adb?hl=zh-cn#download-adb): use the Android Debug Bridge flies
 - [Aria2](https://github.com/aria2/aria2): use the aria2 to multi thead download flies
