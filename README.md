@@ -1,6 +1,6 @@
 # **English** | [简体中文](README_CN.md) |
 
-## Automatic_flashing_the_Magisk_Delta
+## Automatic_flashing_the_Magisk
 
  Can automatic flashing to topjohnwu's Magisk 
  but not English batch flies.....
