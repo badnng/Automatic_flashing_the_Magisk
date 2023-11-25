@@ -2,13 +2,14 @@
 
 ## Automatic_flashing_the_Magisk_Delta
 
- Can automatic flashing to HuskyDG's or topjohnwu's Magisk 
+ Can automatic flashing to topjohnwu's Magisk 
  but not English batch flies.....
 
 ## Features
 
  You can patch the boot image and flash it without installing Magisk Manager on your phone
- You can use anything Magisk Versions for do it
+ Relatively small storage size (compared to V1)
+ ![storage](大小.png)
 
 ## System requirements
 
@@ -16,10 +17,10 @@
 
 ## How to use it 
 
-- Put the payload file of the card swipe packet in this directory
+- Please enter the absolute path of your Payload.bin
 - Now you can flash in with one click without environment variables (please don't delete the source folder!)
-- Double-click the start .bat, select the flashing method according to the model, and then the phone can wait after turning on USB debugging in the boot state
-- If there is no payload .bin, put boot into the boot_origin directory ~
+- Double-click the 开始.bat, select the flashing method according to the model, and then the phone can wait after turning on USB debugging and USB install in the boot state
+- If there is no payload .bin, put boot into the boot directory ~
 - **If there is an authorization window on your phone, please authorize, otherwise it will lead to failure!**
 
 ## Thanks
@@ -29,3 +30,4 @@
 - [Busybox](https://github.com/rmyorston/busybox-w32): Can use .sh on Windows
 - [Android Debug Bridge](https://source.android.google.cn/docs/setup/build/adb?hl=zh-cn#download-adb): use the Android Debug Bridge flies
 - [Aria2](https://github.com/aria2/aria2): use the aria2 to multi thead download flies
+- [gitmirror] (https://www.gitmirror.com/) : provide Chinese Mainland users download speed up service
