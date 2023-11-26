@@ -24,7 +24,7 @@ echo.按B键开始进行新机型init_boot的全自动刷入~
 echo.
 echo.获取最新文件
 %aria%\aria2c.exe -x 16 -c --file-allocation=none -o magisk_lib.zip -d %Magisk_source% https://hub.gitmirror.com/https://github.com/badnng/Tools_library_download/releases/download/test/magisk_lib.zip
-%aria%\aria2c.exe -x 16 -c --file-allocation=none -o Magisk_26300apk.apk -d %Magisk_source% https://hub.gitmirror.com/https://github.com/badnng/Tools_library_download/releases/download/test/Magisk.apk
+%aria%\aria2c.exe -x 16 -c --file-allocation=none -o Magisk.apk -d %Magisk_source% https://hub.gitmirror.com/https://github.com/badnng/Tools_library_download/releases/download/test/Magisk.apk
 echo.请输入选项:
 if exist %Magisk_source%\magisk_lib.zip (
     choice /C AB /N /M ""
