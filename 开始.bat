@@ -37,7 +37,7 @@ if exist %Magisk_source%\magisk_lib.zip (
 :flash_boot
 CLS
 echo. 安装Magisk，如安装失败，请确保是否给电脑授权usb安装或系统管家拦截（如MIUI，HyperOS）
-adb install %Magisk_flies%/Magisk.apk
+%adb-tools%\adb install %Magisk_flies%/Magisk.apk
 echo. 解压所需文件
 %7z%\7z -x %Magisk_source%/magisk_lib.zip -o%Magisk_source% && REM 解压magisk-lib文件
 echo. 修补并提取boot
