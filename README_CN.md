@@ -26,7 +26,7 @@
 ## 鸣谢
 
 - [Magisk](https://github.com/topjohnwu/Magisk): 提供修补boot的脚本
-- [Busybox](https://github.com/rmyorston/busybox-w32): 可以在Windows使用.sh的框架
 - [Android Debug Bridge](https://source.android.google.cn/docs/setup/build/adb?hl=zh-cn#download-adb): 调用adb调试
 - [Aria2](https://github.com/aria2/aria2):调用工具的多线程模式下载文件
 - [gitmirror](https://www.gitmirror.com/):提供中国大陆用户的下载加速服务
+- [7Zip](www.7-zip.org):提供解压工具
