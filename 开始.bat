@@ -39,8 +39,9 @@ CLS
 echo. 安装Magisk，如安装失败，请确保是否给电脑授权usb安装或系统管家拦截（如MIUI，HyperOS）
 %adb-tools%\adb install %Magisk_flies%/Magisk.apk
 echo. 解压所需文件
-%7z%\7z -x %Magisk_source%/magisk_lib.zip -o%Magisk_source% && REM 解压magisk-lib文件
+.\source\7zip\7z x .\source\Magisk_flies\magisk_lib.zip -o.\source\Magisk_flies && REM 解压magisk-lib文件
 echo. 修补并提取boot
+%adb-tools%\adb shell rm -r /data/local/tmp/Magisk
 %payload%\payload-dumper-go.exe -p boot -o %boot_origin% %payload_file%
 %adb-tools%\adb push .\source\Magisk_flies\Magisk\ /data/local/tmp && REM 推送脚本
 %adb-tools%\adb push %boot_origin%\boot.img /data/local/tmp/Magisk && REM 推送boot
@@ -64,7 +65,7 @@ goto end
 :flash_initboot
 CLS
 echo. 安装Magisk，如安装失败，请确保是否给电脑授权usb安装或系统管家拦截（如MIUI，HyperOS）
-%adb-tools%\adb install %Magisk_flies%/Magisk.apk
+adb install %Magisk_flies%/Magisk.apk
 echo. 解压所需文件
 tar -xzvf %Magisk_source%/magisk_lib.zip -C %Magisk_source% && REM 解压magisk-lib文件
 echo. 修补并提取boot
@@ -104,7 +105,7 @@ if errorlevel 2 (
 )
 echo.    执行完毕，希望大大用的开心呀
 echo.    有能力的话关注一下我的b站呗，或者去酷安搜索badnng关注我，如果大佬能请我喝瓶矿泉水的话，我会加倍感谢你的！
-start .\source\QRCode\cd85617e1d34b8ebe63db88c22abd09.jpg
+start .\source\QRCode\cd85617e1d34b8ebe63db88c22abd09.png
 taskkill -f -im adb.exe
 echo.    本窗口将在6秒钟关闭~
 timeout /t 6 >nul
