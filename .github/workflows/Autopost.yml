@@ -3,7 +3,7 @@ name: Release Workflow
 on:
   push:
     branches:
-      - Preview
+      - main
   workflow_dispatch:
 
 jobs:
@@ -20,6 +20,7 @@ jobs:
           release-type: simple
           package-name: .
           manifest: true
+          version-file: .release-please-manifest.json
           changelog-types: >-
             [
               {"type":"feat","section":"✨ Features"},
@@ -44,13 +45,13 @@ jobs:
 
       - name: Create zip archive
         run: |
-          zip -r Release_${VERSION}.zip ./*
+          zip -r my-project-${VERSION}.zip ./*
 
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ needs.release-please.outputs.tag-name }}
-          files: Release_*.zip
+          files: my-project-*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
