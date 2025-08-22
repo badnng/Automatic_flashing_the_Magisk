@@ -19,6 +19,7 @@ jobs:
         with:
           release-type: simple
           package-name: .
+          manifest: true
           changelog-types: >-
             [
               {"type":"feat","section":"✨ Features"},
