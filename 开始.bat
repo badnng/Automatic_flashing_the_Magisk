@@ -255,4 +255,4 @@ start .\source\QRCode\cd85617e1d34b8ebe63db88c22abd09.png
 taskkill -f -im adb.exe
 echo.    本窗口将在6秒钟关闭~
 timeout /t 6 >nul
-explorer "https://space.bilibili.com/355631279?spm_id_from=333.1007.0.0"
+explorer "https://space.bilibili.com/355631279?spm_id_from=333.1007.0.0" && REM 打开b站主页
