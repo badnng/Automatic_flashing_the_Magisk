@@ -1,0 +1,74 @@
+name: Release Workflow
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  # Step 1: 自动生成 Release PR 和 Changelog
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      release-created: ${{ steps.release.outputs.release_created }}
+      tag-name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - name: Run release-please
+        id: release
+        uses: google-github-actions/release-please-action@v4
+        with:
+          release-type: simple
+          package-name: my-project
+          changelog-types: >-
+            [
+              {"type":"feat","section":"✨ Features"},
+              {"type":"fix","section":"🐛 Bug Fixes"},
+              {"type":"docs","section":"📝 Documentation"},
+              {"type":"chore","section":"🧹 Chores","hidden":true}
+            ]
+
+  # Step 2: 打包源码并上传到 Release
+  build-and-upload:
+    needs: release-please
+    if: needs.release-please.outputs.release-created == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create zip archive
+        run: |
+          VERSION=${{ needs.release-please.outputs.tag-name }}
+          zip -r my-project-${VERSION}.zip ./*
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ needs.release-please.outputs.tag-name }}
+          files: my-project-*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Step 3: 确保 CHANGELOG.md 回写到仓库
+  commit-changelog:
+    needs: release-please
+    if: needs.release-please.outputs.release-created == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync Changelog
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull origin main
+          if [ -f CHANGELOG.md ]; then
+            git add CHANGELOG.md
+            git commit -m "chore: update CHANGELOG.md for release ${{ needs.release-please.outputs.tag-name }}" || echo "No changes to commit"
+            git push origin main
+          else
+            echo "No CHANGELOG.md generated."
