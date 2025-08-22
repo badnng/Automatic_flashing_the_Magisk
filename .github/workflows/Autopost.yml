@@ -3,7 +3,7 @@ name: Release Workflow
 on:
   push:
     branches:
-      - main
+      - Preview
   workflow_dispatch:
 
 jobs:
@@ -18,7 +18,7 @@ jobs:
         uses: google-github-actions/release-please-action@v4
         with:
           release-type: simple
-          package-name: my-project
+          package-name: .
           changelog-types: >-
             [
               {"type":"feat","section":"✨ Features"},
