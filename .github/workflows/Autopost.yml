@@ -44,7 +44,7 @@ jobs:
 
       - name: Create zip archive
         run: |
-          zip -r my-project-${VERSION}.zip ./*
+          zip -r Release_${VERSION}.zip ./*
 
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v1
